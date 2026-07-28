@@ -1,0 +1,15 @@
+# Normalize line endings: LF in the repo, native on checkout.
+* text=auto
+
+# Force LF for shell scripts (they break with CRLF).
+*.sh text eol=lf
+
+# Treat these as binary — never touch line endings or diff as text.
+*.wav binary
+*.onnx binary
+*.pt binary
+*.pth binary
+*.bin binary
+*.safetensors binary
+*.gguf binary
+*.pyc binary

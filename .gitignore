@@ -1,14 +1,139 @@
-# Claude Code — personal, machine-local settings
+# ═══════════════════════════════════════════════════════════════════════
+#  THE RECORD — never commit a conversation
+# ═══════════════════════════════════════════════════════════════════════
+memory/
+*.wav
+*.jsonl
+continuity.txt
+heartbeat.json
+daily.log
+docs/probes/          # A-15 transcripts contain real conversation
+
+# ...but keep the test fixtures, they are code
+!tests/fixtures/**/*.wav
+!tests/fixtures/**/*.jsonl
+
+# ═══════════════════════════════════════════════════════════════════════
+#  SECRETS
+# ═══════════════════════════════════════════════════════════════════════
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets.toml
+malang.local.toml
+
+# ═══════════════════════════════════════════════════════════════════════
+#  MODEL ARTIFACTS — large, downloaded at setup, pinned by hash
+# ═══════════════════════════════════════════════════════════════════════
+models/
+*.onnx
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.gguf
+audio/reflex/*.wav    # rendered by scripts/render_reflexes.py
+
+# ═══════════════════════════════════════════════════════════════════════
+#  PYTHON
+# ═══════════════════════════════════════════════════════════════════════
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# virtual environments
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# uv / pip / build
+.uv/
+uv.lock.bak
+pip-log.txt
+pip-delete-this-directory.txt
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+sdist/
+wheels/
+*.egg-info/
+*.egg
+MANIFEST
+.installed.cfg
+
+# test & coverage
+.pytest_cache/
+.cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+.tox/
+.nox/
+nosetests.xml
+
+# type checkers & linters
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+
+# notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# profiling — you will generate these during P-5
+*.prof
+*.lprof
+*.pstats
+
+# ═══════════════════════════════════════════════════════════════════════
+#  CLAUDE CODE
+# ═══════════════════════════════════════════════════════════════════════
+.claude/.persona_state
 .claude/settings.local.json
+.claude/logs/
 
-# OS / editor cruft
-.DS_Store
-Thumbs.db
-*.swp
-.idea/
+# Everything else under .claude/ IS tracked — the agents, skills, hook
+# scripts and specs are part of the project. Do not add a blanket rule
+# like `scripts/` or `*.py` above; it would silently untrack them.
+!.claude/hooks/*.py
+!.claude/skills/**/*.py
+!.claude/specs/*.md
+
+# ═══════════════════════════════════════════════════════════════════════
+#  EDITORS / OS
+# ═══════════════════════════════════════════════════════════════════════
 .vscode/
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+.DS_Store
 
-# Logs & temp
-*.log
+# ═══════════════════════════════════════════════════════════════════════
+#  SCRATCH
+# ═══════════════════════════════════════════════════════════════════════
+scratch/
 tmp/
-temp/
+*.tmp
+*.log
+!daily.log.example
