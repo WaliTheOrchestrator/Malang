@@ -1,0 +1,25 @@
+[project]
+name = "malang"
+version = "0.0.0"
+description = "Malang - a personal AI companion (Phase 1: Presence)."
+# Upper bound is the kokoro-onnx ceiling (requires >=3.10,<3.14). The machine's
+# system interpreter is 3.14.x, so the uv-managed venv MUST be pinned to 3.12
+# (the project convention) or install fails loudly at resolution. See the P-2
+# spec section 11.
+requires-python = ">=3.12,<3.14"
+# Runtime dependency for the P-2 Kokoro RTF probe and, later, speech/tts.py.
+# Pulls onnxruntime (CPU) automatically; bundles espeak-ng via espeakng-loader.
+dependencies = ["kokoro-onnx"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.uv]
+# There is no importable `malang` package yet (it arrives with M1), so uv should
+# manage the environment without trying to build/install this project itself.
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# The probe under scripts/ is named measure_* (not test_*) and lives outside
+# testpaths, so pytest never collects it - no test ever loads the TTS engine.

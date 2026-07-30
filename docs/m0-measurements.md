@@ -32,39 +32,59 @@ fabricating the gate. See the P-1 branch and `docs/groq-latency.md` there.
 
 ## P-2 - Kokoro-82M RTF on the laptop
 
-**STATUS: READY TO RUN.** P-2 is fully local and free - no API key, no network - so it is
-the first M0 gate that can be run to a recorded ruling. Probe:
-`scripts/measure_p2_kokoro.py` (self-contained; `kokoro-onnx` lazily imported).
+**STATUS: RULED - PASSED (mains AND battery), 2026-07-30.** Kokoro-82M (standard fp32
+ONNX, `af_heart`, intra_op=3) is confirmed as Malang's voice. Aggregate p50 RTF **0.529
+on mains / 0.555 on battery** - both well under the 0.8 gate. The fallback ladder stays
+closed. Probe: `scripts/measure_p2_kokoro.py`, 5 rounds x the fixed 10-sentence corpus.
 
-Setup once: pin the `uv` venv to **Python 3.12** (NOT the system 3.14 - `kokoro-onnx`
-requires `<3.14`); `uv add kokoro-onnx`; download `kokoro-v1.0.onnx` and
-`voices-v1.0.bin` from the `model-files-v1.0` release into `models/`.
-
-Run BOTH power sources, then paste each block below and write the ruling.
-Gate (spec section 9): **aggregate p50 RTF < 0.8 sustained -> Kokoro confirmed**; else the
-fallback ladder opens (quantized ONNX -> Supertonic 3 -> Piper).
+Gate (spec section 9): **aggregate p50 RTF < 0.8 sustained -> Kokoro confirmed.** Met on
+both power sources.
 
 ```
 GATE: P-2
-DATE / CONDITIONS:   <fill: mains run - timestamp, i3-1315U>
-RAW NUMBERS:         <paste the script's block: aggregate RTF p50/p95, per-length
-                      breakdown, round1-vs-roundN drift, core-class, non-silence guard>
-RULING:              PENDING (mains run not yet pasted)
+DATE / CONDITIONS:   2026-07-30T10:12:38+05:00 | power=mains | machine=i3-1315U
+                     build=standard | voice=af_heart | intra_op=3 | rounds=5
+RAW NUMBERS:
+    RTF aggregate  p50 0.529  p95 0.676   (n=50 syntheses)
+    by length:     short p50 0.635 p95 0.731   medium p50 0.529 p95 0.603   long p50 0.485 p95 0.518
+    drift:         round1 p50 0.484 -> roundN p50 0.589 (+21.8%)  <-- THERMAL DRIFT >15%
+    elapsed:       129.8s over 5 rounds
+    non-silence:   passed (warm peak 0.424; floor 0.01)
+RULING:              Kokoro CONFIRMED (aggregate p50 0.529 < 0.8 sustained)
 CONSEQUENCE:         spec section 5 active-session CPU/"fan behavior"; feeds (does NOT
                      equal) the 300ms TTS-first-audio budget - that is HP16 / M3a
 REVERSED BY:         a re-run crossing 0.8 the other way (quantized/fp16 build, thermal
-                     state, model swap, or the battery run)
+                     state, model swap)
 ```
 
 ```
 GATE: P-2
-DATE / CONDITIONS:   <fill: battery run - timestamp, i3-1315U>
-RAW NUMBERS:         <paste the script's block>
-RULING:              PENDING (battery run not yet pasted; spec section 4 P-4 makes this
-                     run mandatory - a mains-only ruling is "fiction for a laptop")
+DATE / CONDITIONS:   2026-07-30T10:16:01+05:00 | power=battery | machine=i3-1315U
+                     build=standard | voice=af_heart | intra_op=3 | rounds=5
+RAW NUMBERS:
+    RTF aggregate  p50 0.555  p95 0.709   (n=50 syntheses)
+    by length:     short p50 0.638 p95 0.722   medium p50 0.555 p95 0.610   long p50 0.504 p95 0.571
+    drift:         round1 p50 0.509 -> roundN p50 0.555 (+9.0%)
+    elapsed:       134.0s over 5 rounds
+    non-silence:   passed (warm peak 0.424; floor 0.01)
+RULING:              Kokoro CONFIRMED (aggregate p50 0.555 < 0.8 sustained)
 CONSEQUENCE:         spec section 5
 REVERSED BY:         a re-run crossing 0.8 the other way
 ```
+
+**Ruling (both runs) - PASS, with two honest flags carried forward:**
+
+- **Thermal drift is already real.** Mains drifted **+21.8%** (round1 p50 0.484 ->
+  roundN 0.589) inside a ~2.2-min run that did NOT reach the minute-3-10 throttle window
+  the U-series chassis is known for. Even the drifted roundN p50 (0.589) still clears 0.8,
+  so the gate holds - but this is a yellow flag for **P-5** (the 10-min sustained duplex
+  load), which is the real throttle test, not P-2. Battery drifted only +9.0% (likely
+  already clock-capped, so less thermal headroom to lose).
+- **Short strings are the tightest, exactly per HP16.** The short band carries per-call
+  overhead: p95 **0.731** (mains) / 0.722 (battery) - the closest any number came to the
+  0.8 line. Still under, but the margin on short utterances is smaller than the aggregate
+  p50 suggests. And RTF is NOT the 300ms first-audio budget (HP16) - that is
+  first-micro-chunk latency, measured at M3a.
 
 ---
 
