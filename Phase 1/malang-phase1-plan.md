@@ -12,7 +12,7 @@ Pipecat local (+Afterword subprocess) · AEC3 w/ delay tracking + ERLE probe · 
 
 ## Milestones (each fits one sprint; after M1.5, every one leaves the system usable that evening)
 
-- [ ] **M0 — Measure (1.5d):** TTFT · **live cache-minimum check (Haiku/Sonnet — Block 1 must cross it)** · Kokoro RTF + int8 ear check · STT bake-off (code-switched passage) · WASAPI probe · **P-5 sustained 10-min duplex load w/ core-class logging, minute-1 vs minute-10, mains + battery** (reversal ladder pre-decided: re-baseline → Supertonic → voice-as-mode) · **P-6 blind voice selection** · battery re-runs. Record all rulings.
+- [ ] **M0 — Measure (1.5d):** TTFT · **live cache-minimum check (Haiku/Sonnet — Block 1 must cross it)** · Kokoro RTF ✅ (P-2 PASS 2026-07-30: p50 0.529 mains / 0.555 battery) + int8 ear check · STT bake-off (code-switched passage) · WASAPI probe · **P-5 sustained 10-min duplex load w/ core-class logging, minute-1 vs minute-10, mains + battery** (reversal ladder pre-decided: re-baseline → Supertonic → voice-as-mode) · **P-6 blind voice selection** · battery re-runs. Record all rulings.
 - [ ] **M1 — Scribe + durability + custody (4d):** schema v1.3, fsync writer, torn-tail reader, WAV recovery, heartbeat, supervisor restart, **backup job + restore drill, BitLocker check**. *Exit: native-crash self-heal ≤30s; backup lands on second target.*
 - [ ] **M1.5 — THIN SLICE (2.5d):** Scribe + Claude streaming + CLI + persona block 1. *Exit: a real 20-min typed conversation in `memory/raw/`, schema-valid, backed up.* **Malang exists from this day. Everything after upgrades him.**
 - [ ] **M2 — Ear (2.5d):** wake model on your recordings + music negatives. *Exit: ≥95% @2–3m; 2h Pashto/Urdu playlists → 0 wakes.*

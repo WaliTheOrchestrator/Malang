@@ -1,7 +1,7 @@
 # P-2 — Kokoro RTF measurement
 
 **Milestone:** M0 · **Branch:** `feat/p-2-kokoro-rtf-measurement` · **Created:** 2026-07-29
-**Spec version:** 1.0 · **Status:** approved
+**Spec version:** 1.0 · **Status:** done
 **Governing docs:** malang-phase1-spec.md §9 (P-2), §5 (resource + latency budget), §4 (TTS decision), §4 P-4 (battery re-run) · design §2 (TTS stack), §6 (module layout), §7 (M0 exit, risks), §4 D-4/D-10 · hard-problems HP16 (first-chunk ≠ RTF), HP13 (int8 drift — out of scope here)
 
 ---
