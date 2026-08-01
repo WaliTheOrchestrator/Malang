@@ -1,0 +1,32 @@
+{
+  "note": "SMOKE fixture - synthetic Kokoro audio, NOT the P-3 gate.",
+  "entries": [
+    {
+      "id": "monologue",
+      "register": "monologue",
+      "wav": "audio/monologue.wav",
+      "reference": "reference/monologue.txt",
+      "proper_nouns": [],
+      "codeswitch_spans": []
+    },
+    {
+      "id": "read",
+      "register": "read",
+      "wav": "audio/read.wav",
+      "reference": "reference/read.txt",
+      "proper_nouns": [],
+      "codeswitch_spans": []
+    },
+    {
+      "id": "codeswitch",
+      "register": "codeswitch",
+      "wav": "audio/codeswitch.wav",
+      "reference": "reference/codeswitch.txt",
+      "proper_nouns": [
+        "Malang",
+        "Zarak"
+      ],
+      "codeswitch_spans": []
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "note": "P-3 STT bake-off corpus. Raw WAVs under audio/ are git-ignored (personal voice); reference/*.txt and this manifest are tracked. See prompts.md and README.md.",
+  "entries": [
+    {
+      "id": "monologue",
+      "register": "monologue",
+      "wav": "audio/monologue.wav",
+      "reference": "reference/monologue.txt",
+      "proper_nouns": ["Malang"],
+      "codeswitch_spans": []
+    },
+    {
+      "id": "read",
+      "register": "read",
+      "wav": "audio/read.wav",
+      "reference": "reference/read.txt",
+      "proper_nouns": [],
+      "codeswitch_spans": []
+    },
+    {
+      "id": "codeswitch",
+      "register": "codeswitch",
+      "wav": "audio/codeswitch.wav",
+      "reference": "reference/codeswitch.txt",
+      "proper_nouns": ["Malang"],
+      "codeswitch_spans": []
+    }
+  ]
+}

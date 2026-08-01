@@ -1,0 +1,17 @@
+Malang — third-party model attribution
+======================================
+
+This project uses third-party speech models. Most are MIT/Apache-2.0. One carries
+an attribution requirement and is recorded here:
+
+Parakeet TDT 0.6B v3 (STT, memory path — P-3 bake-off)
+  - ONNX conversion: Hugging Face `istupakov/parakeet-tdt-0.6b-v3-onnx`
+    (commit 8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce)
+  - Upstream model: NVIDIA `nvidia/parakeet-tdt-0.6b-v3`
+  - License: CC-BY-4.0 (https://creativecommons.org/licenses/by/4.0/)
+  - Attribution: "Parakeet TDT 0.6B v3 by NVIDIA, used under CC-BY-4.0."
+
+Other P-3 weights (no attribution clause, recorded for completeness):
+  - whisper-large-v3-turbo (CT2): HF `deepdml/faster-whisper-large-v3-turbo-ct2` — MIT
+  - Moonshine v2 small/medium (English): Moonshine AI — MIT (English models)
+  - Kokoro-82M (TTS, P-2): weights Apache-2.0; kokoro-onnx wrapper MIT
