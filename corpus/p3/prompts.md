@@ -1,6 +1,7 @@
 # P-3 corpus — what to record
 
-Goal: **~30 minutes** of *your* speech on the **production mic**, in three
+Goal: **~4 minutes** of *your* speech on the **production mic** (reduced from the
+spec's original 30-min target by owner decision, 2026-08-02), in three
 registers, so the bake-off measures the models on the voice, accent, room, and
 device they will actually face. Record each register to its own file with
 `python scripts/record_p3_corpus.py` (writes 16 kHz mono WAV under `audio/`).

@@ -137,3 +137,12 @@ tmp/
 *.tmp
 *.log
 !daily.log.example
+
+# ═══════════════════════════════════════════════════════════════════════
+#  P-3 corpus — filled references, manifest tags, and seed vocab contain
+#  real personal names. Owner chose to keep them LOCAL (2026-08-02).
+# ═══════════════════════════════════════════════════════════════════════
+corpus/p3/reference/monologue.txt
+corpus/p3/reference/codeswitch.txt
+corpus/p3/manifest.json
+docs/p3-vocab-seed.txt
