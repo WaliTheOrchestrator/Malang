@@ -473,13 +473,19 @@ def transcribe_parakeet(entries, models_dir, threads):
 
     model_dir = str(Path(models_dir) / "parakeet-tdt-0.6b-v3-onnx")
     try:
-        model = onnx_asr.load_model("nemo-parakeet-tdt-0.6b-v3", model_dir, quantization="int8")
+        base = onnx_asr.load_model("nemo-parakeet-tdt-0.6b-v3", model_dir, quantization="int8")
     except TypeError:
-        model = onnx_asr.load_model("nemo-parakeet-tdt-0.6b-v3", model_dir)
+        base = onnx_asr.load_model("nemo-parakeet-tdt-0.6b-v3", model_dir)
+    # Long-form: onnx-asr's bare recognize() silently drops parts of clips longer
+    # than ~30s (verified on this corpus - it returned only the tail of a 60s clip).
+    # VAD segmentation is its supported long-form path; feed the SAME audio, chunked
+    # on silence, so the comparison stays fair.
+    model = base.with_vad(onnx_asr.load_vad("silero"))
     out = {}
     for e in entries:
         res = model.recognize(e["wav"])
-        out[e["id"]] = res if isinstance(res, str) else " ".join(res)
+        out[e["id"]] = res if isinstance(res, str) else " ".join(
+            getattr(seg, "text", str(seg)) for seg in res)
     return out
 
 
@@ -490,7 +496,10 @@ def transcribe_whisper(entries, models_dir, threads):
     model = WhisperModel(model_dir, device="cpu", compute_type="int8", cpu_threads=int(threads))
     out = {}
     for e in entries:
-        segments, _info = model.transcribe(e["wav"], language="en", beam_size=5)
+        # vad_filter drops non-speech so whisper doesn't hallucinate on pauses/silence
+        # (the classic large-v3 failure mode); it handles long-form natively otherwise.
+        segments, _info = model.transcribe(e["wav"], language="en", beam_size=5,
+                                           vad_filter=True)
         out[e["id"]] = " ".join(seg.text for seg in segments).strip()
     return out
 
