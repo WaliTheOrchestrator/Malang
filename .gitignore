@@ -12,6 +12,9 @@ docs/probes/          # A-15 transcripts contain real conversation
 # ...but keep the test fixtures, they are code
 !tests/fixtures/**/*.wav
 !tests/fixtures/**/*.jsonl
+# ...except the P-3 synthetic smoke clips: regenerable via scripts/_make_p3_smoke.py,
+# used by no test, and the pass-feature gate forbids ANY *.wav in git.
+tests/fixtures/p3_smoke/audio/*.wav
 
 # ═══════════════════════════════════════════════════════════════════════
 #  SECRETS
@@ -137,3 +140,12 @@ tmp/
 *.tmp
 *.log
 !daily.log.example
+
+# ═══════════════════════════════════════════════════════════════════════
+#  P-3 corpus — filled references, manifest tags, and seed vocab contain
+#  real personal names. Owner chose to keep them LOCAL (2026-08-02).
+# ═══════════════════════════════════════════════════════════════════════
+corpus/p3/reference/monologue.txt
+corpus/p3/reference/codeswitch.txt
+corpus/p3/manifest.json
+docs/p3-vocab-seed.txt

@@ -9,10 +9,32 @@ description = "Malang - a personal AI companion (Phase 1: Presence)."
 requires-python = ">=3.12,<3.14"
 # Runtime dependency for the P-2 Kokoro RTF probe and, later, speech/tts.py.
 # Pulls onnxruntime (CPU) automatically; bundles espeak-ng via espeakng-loader.
-dependencies = ["kokoro-onnx"]
+#
+# The four STT deps are the P-3 bake-off (spec section 11, docs-researcher
+# confirmed 2026-08-01). All CPU-only, win_amd64/3.12. They are needed anyway by
+# speech/stt_live.py (M3a) and speech/stt_final.py (M7).
+#   onnx-asr[cpu,hub] -> Parakeet TDT 0.6B v3 ONNX (avoids the NeMo stack); the
+#     [cpu] extra's onnxruntime is already satisfied by kokoro-onnx's 1.28.0, the
+#     [hub] extra gives huggingface-hub for the pinned weight download.
+#   moonshine-voice   -> Moonshine v2 small+medium (live-path candidate).
+#   faster-whisper    -> whisper-large-v3-turbo, int8-at-load (the memory-path
+#     second-pass challenger); pulls ctranslate2.
+#   jiwer             -> authoritative WER/CER cross-check; the probe's pure core
+#     owns its own aligner, so no test depends on jiwer being installed.
+dependencies = [
+    "kokoro-onnx",
+    "onnx-asr[cpu,hub]==0.12.0",
+    "moonshine-voice==0.1.0",
+    "faster-whisper==1.2.1",
+    "jiwer==4.0.0",
+]
 
 [project.optional-dependencies]
 dev = ["pytest"]
+# The P-3 corpus recorder only. Kept out of the base install so the harness and
+# tests never depend on PortAudio. WAVs are written with the stdlib `wave` module,
+# so no soundfile/scipy is needed here.
+recorder = ["sounddevice"]
 
 [tool.uv]
 # There is no importable `malang` package yet (it arrives with M1), so uv should

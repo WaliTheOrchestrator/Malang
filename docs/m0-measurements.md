@@ -88,7 +88,60 @@ REVERSED BY:         a re-run crossing 0.8 the other way
 
 ---
 
-## P-3 - STT bake-off: Moonshine / Parakeet / whisper-turbo, code-switched (pending)
+## P-3 - STT bake-off: Moonshine / Parakeet / whisper-turbo, code-switched
+
+**STATUS: RULED (first pass), 2026-08-02.** whisper-large-v3-turbo dominates on this
+speaker's accented, name-dense, heavily code-switched speech - a straight-swap ruling,
+NOT the Parakeet-solo the spec had assumed. Moonshine's live WER is far above the ~12%
+tolerance, so downstream text-keyed thresholds need recalibration. All four models mangle
+the speaker's proper nouns (67-100% name error) - the FR-18 name lexicon is load-bearing,
+and its seed list was captured (kept local; see below).
+
+**Corpus honesty:** ~4 min of speech (3 registers - monologue / read / code-switched -
+465 reference words), scripted read, single speaker, production mic, silence-trimmed.
+This is REDUCED from the spec's original 30-min target by owner decision (2026-08-02),
+accepted as a directional first-pass. Small-sample: WERs have wide confidence intervals.
+Also: the speaker sometimes realizes /f/ as /p/, so a subset of substitution "errors" are
+faithful to pronunciation, not model failures (e.g. a name with /f/ heard with /p/).
+
+```
+GATE: P-3
+DATE / CONDITIONS:   2026-08-02T15:01+05:00 | machine=i3-1315U | threads=3
+                     corpus=~4min/465w (monologue+read+codeswitch), scripted, silence-trimmed
+                     parakeet=onnx-asr+silero-VAD int8 | whisper=faster-whisper turbo int8 vad_filter
+                     moonshine=small+medium en (streaming, non-stream decode)
+RAW NUMBERS (WER / proper-noun-error-rate, micro-averaged):
+    model            overall  read   monologue  codeswitch   PN(all)  PN(codeswitch)
+    whisper-turbo     36.3%   20.7%    31.4%       60.3%       66.7%      78.6%
+    parakeet          51.2%   22.1%    43.3%       93.9%       92.6%     100.0%
+    moonshine-small   55.9%   22.1%    51.0%       99.2%       88.9%      92.9%
+    moonshine-medium  62.2%   25.0%    44.3%      128.2%       85.2%     100.0%
+MEMORY-PATH RULING:  whisper-SWAP - whisper-turbo dominates across the board
+                     (code-switched proper-noun gap +21.4pp, overall WER gap +14.8pp vs
+                     Parakeet). SUBJECT TO runtime viability: whisper-turbo must fit FR-11's
+                     5-min post-session window + the Afterword ~3GB peak on this i3 - NOT yet
+                     verified (whisper is the slowest CPU model). Confirm before wiring M7.
+LIVE-PATH RULING:    Moonshine live WER 55.9% (small) >> 12% -> RECALIBRATE every text-keyed
+                     threshold downstream (reflex selector, fused endpointer, router escalate,
+                     HP2). Even on clean read English it is ~22%; the ~12% assumption does not
+                     hold for this speaker without FR-18 name repair. Recommended size: small
+                     (lower WER than medium here). This changes M3a/M5 calibration.
+CONSEQUENCE:         M3a live model = Moonshine (small) but with the recalibration flag;
+                     M7 memory path leans whisper-turbo (pending runtime check), not Parakeet-
+                     solo; FR-18 name lexicon confirmed essential (seed captured).
+REVERSED BY:         a fuller/longer/spontaneous corpus (this is ~4 min, scripted); a
+                     whisper runtime-viability failure (would fall back to Parakeet-primary +
+                     whisper second pass, or Parakeet-solo); a model swap.
+```
+
+**Seed vocab (FR-18):** every name was mis-heard in believable ways (e.g. the presence's own
+name landed as madame / manang / melang / malank across models). The full near-miss list is in
+`docs/p3-vocab-seed.txt`, which is **git-ignored** (it contains real personal names) along with
+the filled `corpus/p3/reference/*.txt` and `corpus/p3/manifest.json` - owner chose to keep all
+name-bearing artifacts local, off GitHub. The harness, schema, and this name-free ruling are tracked.
+
+**Open item for M7:** measure whether whisper-large-v3-turbo transcribes a full session inside
+FR-11's 5-minute window on the i3-1315U before committing to the swap.
 
 ## P-4 - Selective-int8 Kokoro ear check + WASAPI buffer probe (pending)
 
