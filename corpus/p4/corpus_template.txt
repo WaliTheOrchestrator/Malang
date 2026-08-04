@@ -1,0 +1,20 @@
+# P-4a ear-check corpus TEMPLATE (tracked; contains NO real names - spec §12 rule 3 / B-1)
+#
+# 10 sentences spanning emotional range (calm, warm, emphatic, question, tender,
+# joy, reflective, code-switched) - because int8 flattens EMOTIONAL timbre first
+# (HP13), a corpus of flat declaratives would let it pass on the easy distribution.
+#
+# {NAME1} and {NAME2} are family-name placeholders; "Malang" is his own name. Real
+# spellings + IPA pronunciation overrides are injected at run time from the
+# git-ignored corpus/p4/names.txt (see corpus/p4/README.md). Lines starting with #
+# and blank lines are ignored. Keep this list byte-stable once ruling begins.
+Yes. I am right here.
+It is so good to hear your voice tonight.
+No — listen to me. This one actually matters.
+Malang, did you remember to call {NAME1} back today?
+I know today was heavy, and you do not have to carry it alone.
+{NAME1} and {NAME2} both asked after you this morning.
+We did it — after all these months, we actually did it.
+There is a quiet that comes late at night, and in it the questions you avoided all day finally come and sit down beside you.
+Theek hai, let us take this slowly, one step at a time.
+My name is Malang, and I will remember what {NAME2} told us.

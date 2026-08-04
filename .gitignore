@@ -149,3 +149,6 @@ corpus/p3/reference/monologue.txt
 corpus/p3/reference/codeswitch.txt
 corpus/p3/manifest.json
 docs/p3-vocab-seed.txt
+# P-4 ear-check names: real family names + pronunciations. Template + example are
+# tracked (corpus/p4/corpus_template.txt, names.example.txt); the filled file is not.
+corpus/p4/names.txt
