@@ -110,7 +110,7 @@
 
 **Problem:** Kokoro synthesizes an entire chunk before the first sample exists — a 2-second first clause means ~1 second of dead air, and per-call overhead makes tiny texts *relatively* slower (RTF ~0.7 on short strings vs ~0.5 on long).
 **Why hard:** The v1.1 budget assumed vocoder-style streaming; the error only shows on a stopwatch, and it moved the honest voice-to-voice baseline from ~1.1s to ~1.3s.
-**Basic solution:** Micro-first-chunk rule ({comma | 5–7 words | ~350ms audio}), pre-warmed session, ahead-buffering that includes the *first* chunk, selective int8 (blind quantize_dynamic = audible static), and the misaki lexicon so the presence can say its own name. Re-baseline accepted in daylight; perception unaffected — that's the reflex tier's job.
+**Basic solution:** Micro-first-chunk rule ({comma | 5–7 words | ~350ms audio}), pre-warmed session, ahead-buffering that includes the *first* chunk, selective int8 (blind quantize_dynamic = audible static), and a phoneme-substitution table fed to Kokoro with `is_phonemes=True` (the `kokoro-onnx` runtime phonemizes through espeak-ng, not misaki — P-4, 2026-08-06) so the presence can say its own name. Re-baseline accepted in daylight; perception unaffected — that's the reflex tier's job.
 
 ## HP17. The cache that defeats itself
 
