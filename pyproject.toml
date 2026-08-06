@@ -35,6 +35,16 @@ dev = ["pytest"]
 # tests never depend on PortAudio. WAVs are written with the stdlib `wave` module,
 # so no soundfile/scipy is needed here.
 recorder = ["sounddevice"]
+# P-4b: the shared-mode event-driven WASAPI output-buffer probe. sounddevice/
+# PortAudio again, kept out of base for the same reason as `recorder` — the P-4b
+# pure-core tests import the probe with a LAZY sounddevice import, so they never
+# pull PortAudio (spec p-4 §10/§11).
+p4 = ["sounddevice"]
+# P-4 selective-int8 build utility ONLY. `onnxruntime.quantization` is NOT bundled
+# with the onnxruntime CPU wheel — it imports `onnx`, which onnxruntime/kokoro-onnx
+# do not pull transitively (docs-researcher, 2026-08-03). Build-time tool, never
+# imported by runtime speech/tts.py (spec p-4 §11).
+build = ["onnx>=1.22,<2"]
 
 [tool.uv]
 # There is no importable `malang` package yet (it arrives with M1), so uv should

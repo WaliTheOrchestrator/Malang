@@ -1,0 +1,21 @@
+# EXAMPLE names file for the P-4a ear check (this .example IS tracked).
+#
+# Copy to corpus/p4/names.txt (which is GIT-IGNORED) and replace with your real
+# family names + their correct pronunciations. The real file never enters git -
+# the P-3 owner decision keeps real names off GitHub (spec §12 rule 3 / B-1).
+#
+# Format, TAB-separated:   PLACEHOLDER <TAB> spelling <TAB> ipa_override(optional)
+#
+#   - PLACEHOLDER matches a {PLACEHOLDER} token in corpus_template.txt.
+#   - spelling is what appears in the sentence text (drives default phonemization).
+#   - ipa_override (optional) is a phoneme string fed to Kokoro via is_phonemes=True
+#     when the default espeak-ng pronunciation is wrong. It MUST use real IPA
+#     glyphs, incl. the primary-stress mark U+02C8 (ˈ), NOT an ASCII apostrophe -
+#     the Kokoro tokenizer silently drops non-vocab characters (spec §12 rule 5).
+#
+# The placeholder examples below are FICTIONAL and only show the format.
+NAME1	Zarak	zˈɑːɾək
+NAME2	Karim	kˈɑːɾiːm
+# 'Malang' appears literally in the template; add an override if espeak-ng's
+# default (mˈælæŋ) is not the pronunciation you want him to say:
+MALANG	Malang	mɑːlˈɑːŋ
