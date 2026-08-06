@@ -1,7 +1,7 @@
 # P-4 — Selective-int8 ear check + WASAPI probe
 
 **Milestone:** M0 · **Branch:** `feat/p-4-selective-int8-ear-check-wasapi-probe` · **Created:** 2026-08-03
-**Spec version:** 1.1 · **Status:** approved (owner-approved 2026-08-03; both pre-approval research items resolved by docs-researcher; spec-guardian BLOCKING B-1 fixed)
+**Spec version:** 1.1 · **Status:** done (shipped 2026-08-06 via PR #5, squash-merged `c78f41a`; P-4a → ship fp32 — negative control failed twice, difference below blind-ABX threshold, selective-int8 kept for a P-5 revisit; P-4b → 40.0ms mains+battery ≤50ms confirmed; rulings in `docs/m0-measurements.md`. Owner-approved 2026-08-03; pre-approval research resolved by docs-researcher; spec-guardian BLOCKING B-1 fixed)
 **Governing docs:** malang-phase1-spec.md §9 (P-4), §5 (TTS-first-audio + audio-output budget, exclusive-mode rejection), §8 (TTS underrun) · design §2 (TTS stack "selective-int8 ONNX per spec P-4"; Audio I/O "WASAPI shared-mode event-driven"), §7 (M0 exit, risks), D-4 (`render_reflexes.py`), D-10 (micro-first-chunk, "P-4 ear check gates") · hard-problems HP13 (int8 voice drift — the ear test IS the gate), HP14 (WASAPI buffer minefield — log the negotiated size), HP16 ("blind quantize_dynamic = audible static → selective int8") · CLAUDE.md hard rule 4 (one voice; every speed gain passes an ear test)
 
 ---
