@@ -143,7 +143,81 @@ name-bearing artifacts local, off GitHub. The harness, schema, and this name-fre
 **Open item for M7:** measure whether whisper-large-v3-turbo transcribes a full session inside
 FR-11's 5-minute window on the i3-1315U before committing to the swap.
 
-## P-4 - Selective-int8 Kokoro ear check + WASAPI buffer probe (pending)
+## P-4 - Selective-int8 Kokoro ear check + WASAPI buffer probe
+
+Two independent sub-gates, both RULED (2026-08-06). **P-4a (int8 ear check) - ship
+fp32.** **P-4b (WASAPI buffer) - CONFIRMED 40.0ms, mains AND battery, built-in speaker.**
+
+### P-4a - selective-int8 vs fp32, blind ABX by ear
+
+**RULING: SHIP fp32 (owner decision, 2026-08-06).** Two blind ABX runs both failed
+the negative control - the grader could not distinguish even the *blind* off-the-shelf
+int8 from fp32, so per spec §12 rule 1 no "int8 indistinguishable" verdict is
+trustworthy. A *sighted* headphones comparison confirmed a real but very slight
+difference (the gear is not broken); the difference is simply below the threshold of
+reliable *blind* ABX discrimination on this voice (af_heart, English). Rather than
+force a pass, we take the spec's conservative branch (§9 "Failing → fp32 and revise
+honestly"): fp32 ships. int8 is not needed for speed (P-2 passed on fp32); its only
+value is the ~220MB RAM + thermal headroom for P-5, so the selective-int8 build is kept
+(behind `speech.tts.model_build`) and **revisited at P-5** only if RAM/thermal pressure
+is real.
+
+```
+GATE: P-4a (selective-int8 ear check, blind ABX)
+DATE / CONDITIONS:   2026-08-06 | machine=i3-1315U | grader=waleed | voice=af_heart
+                     threads=3 | trials/contrast=24 | headphones (run 2)
+                     builds: fp32=7d5df8ecf7d4 selective=f57cb0c5b15e blind=6e742170d309
+                     names file SHA256 52c626be0eac...877d8406 | non-silence guard passed
+RAW NUMBERS (two blind runs, both NEGATIVE CONTROL FAILED):
+    run 1 (mixed gear):  selective 12/24 (p=0.58)   blind-control 13/24 (p=0.42)
+    run 2 (headphones):  selective 10/24 (p=0.85)   blind-control 11/24 (p=0.73)
+    sighted A/B check:   a real but SLIGHT difference audible (instrument not broken)
+    name pronunciation:  9/9 name-bearing clips correct across fp32/selective/blind
+RULING:              SHIP fp32. Negative control failed twice -> per §12 rule 1 the
+                     "indistinguishable" reading is not trustworthy; take §9's fp32
+                     branch. The difference is below blind-ABX threshold on this voice.
+CONSEQUENCE:         speech.tts.model_build = fp32 for M3a. Selective-int8 build kept
+                     (docs/p4-int8-build.md) and REVISITED at P-5 if RAM/thermal needs
+                     it. Names confirmed sayable (9/9) - the D-4 render_reflexes bake is
+                     unblocked for whichever build ships. Voice-independent; re-run on
+                     the P-6 winner (rule 4).
+REVERSED BY:         P-5 showing real RAM/thermal pressure (would re-audition int8 with
+                     a more sensitive instrument / 2nd grader), a model or voice swap.
+```
+
+### P-4b - shared-mode event-driven WASAPI output buffer
+
+**RULING: CONFIRMED (≤50ms), mains AND battery.** The negotiated shared-mode latency on
+the built-in Realtek speaker was **40.0ms on both power sources** - inside the §5 50ms
+ceiling, ~10ms below it, and ~20ms above PortAudio's shared-mode floor (§6: modest, not
+comfortable, headroom). **Device-selection honesty (HP8):** the Windows *default* WASAPI
+output had flipped to a virtual device ('Speakers (GVAUDIO)') by the mains run, so the
+mains number was re-taken **explicitly on the Realtek built-in (device #13)** to match
+the battery run's device - a Bluetooth/USB/virtual device is a different measurement (§3).
+Both the GVAUDIO default and the Realtek built-in negotiated 40.0ms.
+
+```
+GATE: P-4b (shared-mode event-driven WASAPI output buffer)
+DATE / CONDITIONS:   2026-08-06 | machine=i3-1315U | device='Speaker (Realtek(R) Audio)'
+                     host=Windows WASAPI | mode=shared/event-driven
+                     samplerate=48000 (device mix rate) | frame_ms=20 | channels=1
+RAW NUMBERS (Stream.latency, the NEGOTIATED value - HP14):
+    battery:  40.0ms   <= 50ms gate
+    mains:    40.0ms   <= 50ms gate   (re-taken on device #13 Realtek; the auto-default
+                                       had flipped to a virtual 'GVAUDIO' device)
+    PortAudio shared-mode floor ~20ms - headroom to the 50ms gate is modest (§6)
+RULING:              CONFIRMED on mains AND battery (40.0ms <= 50ms). The §5 shared-mode
+                     output-path budget holds on the built-in speaker.
+CONSEQUENCE:         confirms the §5 shared-mode output-path budget M3a is graded
+                     against; keeps audio.output.exclusive=false the default. This is the
+                     driver buffer, NOT the acoustic path (HP10/M3b - M3a/M3b instrument
+                     the end-to-end perceived number).
+REVERSED BY:         a different output device (Bluetooth/USB/virtual negotiates its own
+                     buffer), a driver update, or a re-run crossing 50ms the other way.
+```
+
+**Both sub-gates RULED (2026-08-06):** P-4a ships fp32; P-4b confirmed 40.0ms mains AND
+battery. The P-4 M0 checkbox is TICKED.
 
 ## P-5 - Sustained 10-minute duplex load, mains and battery, core-class logged (pending)
 

@@ -37,4 +37,4 @@ The blind-ABX corpus injects real family names from a git-ignored local file
 the ear check runs, so a re-run proves the SAME corpus was graded (spec §12
 rule 3). Left blank until the first P-4a run:
 
-- **`corpus/p4/names.txt` SHA256:** _(fill at ear-check time)_
+- **`corpus/p4/names.txt` SHA256:** `52c626be0eac2c43c5cbe027fc2a21be22127126a9409cbf6abff5d7877d8406` (graded 2026-08-06)
